@@ -49,6 +49,7 @@ Samples are organized by OCI service:
   - `aiq-2.0/` — NVIDIA AIQ 2.0 on OKE *(coming soon)*
 - [`generative-ai-samples/`](./generative-ai-samples) — Samples for NVIDIA generative AI workflows on OCI.
   - [`agentic-multimodal-expense-intelligence/`](./generative-ai-samples/agentic-multimodal-expense-intelligence/) — Nemotron Parse + Omni receipt intelligence with NemoClaw-style governance controls.
+- [`nemotron-switchyard/`](./nemotron-switchyard/) — Co-locate Nemotron and Qwen on DGX Spark and route requests with NVIDIA NeMo Switchyard.
 
 Additional samples will be added over time.
 
