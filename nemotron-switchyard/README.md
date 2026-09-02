@@ -151,6 +151,8 @@ export NEMOTRON_SWITCHYARD_API_KEY="$(openssl rand -hex 32)"
 
 Keep this value in the same host shell used to start Switchyard. Do not commit it to the repository.
 
+The authenticated vLLM endpoints use HTTP only over the host loopback interface. Keep their Docker port bindings on `127.0.0.1`; if you expose either backend beyond the host, terminate TLS in front of it instead of reusing this local-only configuration.
+
 ## Step 4. Start the Qwen coder first
 
 If you are restarting after a failed attempt, remove both playbook containers so the new memory settings take effect:
@@ -184,7 +186,7 @@ docker run -d --name qwen36-vllm --restart no \
 Wait until the endpoint is ready:
 
 ```bash
-until curl -fsS \
+until curl --connect-timeout 2 --max-time 10 -fsS \
   -H "Authorization: Bearer $NEMOTRON_SWITCHYARD_API_KEY" \
   http://127.0.0.1:8000/v1/models >/dev/null; do
   if [ "$(docker inspect -f '{{.State.Running}}' qwen36-vllm 2>/dev/null)" != "true" ]; then
@@ -194,7 +196,7 @@ until curl -fsS \
   sleep 5
 done
 
-curl -fsS \
+curl --connect-timeout 2 --max-time 10 -fsS \
   -H "Authorization: Bearer $NEMOTRON_SWITCHYARD_API_KEY" \
   http://127.0.0.1:8000/v1/models >/dev/null
 ```
@@ -227,7 +229,7 @@ docker run -d --name nemotron-vllm --restart no \
 Wait until both models are ready:
 
 ```bash
-until curl -fsS \
+until curl --connect-timeout 2 --max-time 10 -fsS \
   -H "Authorization: Bearer $NEMOTRON_SWITCHYARD_API_KEY" \
   http://127.0.0.1:8001/v1/models >/dev/null; do
   if [ "$(docker inspect -f '{{.State.Running}}' nemotron-vllm 2>/dev/null)" != "true" ]; then
@@ -237,7 +239,7 @@ until curl -fsS \
   sleep 5
 done
 
-curl -fsS \
+curl --connect-timeout 2 --max-time 10 -fsS \
   -H "Authorization: Bearer $NEMOTRON_SWITCHYARD_API_KEY" \
   http://127.0.0.1:8001/v1/models >/dev/null
 
